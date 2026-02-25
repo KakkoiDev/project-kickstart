@@ -7,7 +7,7 @@ Go from "new project" to "first line of code" without losing scope, time, or tru
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OWNER/project-kickstart/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash
 ```
 
 This installs:
@@ -45,7 +45,7 @@ The templates and guides work standalone. Copy a template, fill it in, use the g
 
 ### Stacked PRs (optional)
 
-[git-dispatch](https://github.com/OWNER/git-dispatch) turns TRD task numbers into stacked PRs automatically. Install separately if you want the full pipeline:
+[git-dispatch](https://github.com/KakkoiDev/git-dispatch) turns TRD task numbers into stacked PRs automatically. Install separately if you want the full pipeline:
 
 ```
 TRD -> git dispatch split -> one branch per task -> git dispatch pr -> stacked PRs

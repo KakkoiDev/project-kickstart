@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # project-kickstart installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/OWNER/project-kickstart/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash
 
 INSTALL_DIR="$HOME/.project-kickstart"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
-REPO="OWNER/project-kickstart"
+REPO="KakkoiDev/project-kickstart"
 BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
 
@@ -104,6 +104,6 @@ printf "\n"
 
 # 6. Optional: git-dispatch
 printf "  ${BOLD}Optional:${NC} git-dispatch (TRD tasks -> stacked PRs)\n"
-printf "  Install separately: https://github.com/OWNER/git-dispatch\n"
+printf "  Install separately: https://github.com/KakkoiDev/git-dispatch\n"
 printf "  Without it: create one branch per TRD task manually.\n"
 printf "\n"
