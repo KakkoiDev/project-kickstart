@@ -1,0 +1,1 @@
+/home/kakkoidev/.aidb/project-kickstart/main/REVIEW.md

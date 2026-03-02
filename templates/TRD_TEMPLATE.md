@@ -1,6 +1,6 @@
 # {Project Title}: Technical Requirements Document
 
-> See [TRD Guide](./TRD_GUIDE.md) for section-by-section rules, task decomposition heuristics, and the quality checklist.
+> See [TRD Guide](../guides/TRD_GUIDE.md) for section-by-section rules, task decomposition heuristics, and the quality checklist.
 
 | Field      | Value                          |
 |------------|--------------------------------|

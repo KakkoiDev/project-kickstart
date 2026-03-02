@@ -1,6 +1,6 @@
 # Project Brief: {Project Name}
 
-> **This is your preparation.** Fill this out before the scoping meeting and share it with engineers at least 24 hours in advance. The [Scoping Checklist](./PROJECT_SCOPING_CHECKLIST.md) is the validation: you'll walk through it together in the meeting to confirm, challenge, and expand what you wrote here. See the [Briefing Guide](./PROJECT_BRIEFING_GUIDE.md) for detailed instructions on each section.
+> **This is your preparation.** Fill this out before the scoping meeting and share it with engineers at least 24 hours in advance. The [Scoping Checklist](./PROJECT_SCOPING_CHECKLIST.md) is the validation: you'll walk through it together in the meeting to confirm, challenge, and expand what you wrote here. See the [Briefing Guide](../guides/PROJECT_BRIEFING_GUIDE.md) for detailed instructions on each section.
 
 | Field | Value |
 |-------|-------|

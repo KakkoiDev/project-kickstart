@@ -2,7 +2,7 @@
 
 A reference for engineers before starting any new project. Read this, run the checklists, and you will catch 90% of the problems that derail projects before a single line of code is written.
 
-**Related documents:** [Project Briefing Guide](./PROJECT_BRIEFING_GUIDE.md) (the PM/Client counterpart) | [Scoping Checklist](./PROJECT_SCOPING_CHECKLIST.md) (shared worksheet) | [TRD Template](./TRD_TEMPLATE.md) (your output) | [TRD Guide](./TRD_GUIDE.md) (rules for writing TRDs)
+**Related documents:** [Project Briefing Guide](./PROJECT_BRIEFING_GUIDE.md) (the PM/Client counterpart) | [Scoping Checklist](../templates/PROJECT_SCOPING_CHECKLIST.md) (shared worksheet) | [TRD Template](../templates/TRD_TEMPLATE.md) (your output) | [TRD Guide](./TRD_GUIDE.md) (rules for writing TRDs)
 
 ---
 
@@ -115,7 +115,7 @@ If the exploration phase is denied:
 
 ## 4. Shaping the Brief (with the PM)
 
-The PM's input document may be called a PRD (Product Requirements Document) or a project brief. In this framework, the [Project Brief Template](./PROJECT_BRIEF_TEMPLATE.md) serves as the PRD. Engineers don't write it, but you should shape it. A bad brief creates a bad TRD creates bad code. Intervene early.
+The PM's input document may be called a PRD (Product Requirements Document) or a project brief. In this framework, the [Project Brief Template](../templates/PROJECT_BRIEF_TEMPLATE.md) serves as the PRD. Engineers don't write it, but you should shape it. A bad brief creates a bad TRD creates bad code. Intervene early.
 
 ### What a Good Brief Contains (Engineer's Checklist)
 

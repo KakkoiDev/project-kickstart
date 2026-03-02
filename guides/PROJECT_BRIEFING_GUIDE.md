@@ -4,7 +4,7 @@ What to prepare before meeting your engineering team. The better you prepare, th
 
 This is the other side of the coin from [PROJECT_SCOPING_GUIDE.md](./PROJECT_SCOPING_GUIDE.md) (the engineer's playbook).
 
-> **Want to skip ahead?** Start with the [Brief Template](./PROJECT_BRIEF_TEMPLATE.md). Fill it out, then come back here for any section you're unsure about.
+> **Want to skip ahead?** Start with the [Brief Template](../templates/PROJECT_BRIEF_TEMPLATE.md). Fill it out, then come back here for any section you're unsure about.
 
 ---
 
@@ -119,7 +119,7 @@ Gather everything the engineer might need to understand the domain:
 
 If you only have time for one document, make it this. A project brief is a 1–3 page document that packages everything from Section 2 into a readable format.
 
-Use the standalone template: **[PROJECT_BRIEF_TEMPLATE.md](./PROJECT_BRIEF_TEMPLATE.md)**
+Use the standalone template: **[PROJECT_BRIEF_TEMPLATE.md](../templates/PROJECT_BRIEF_TEMPLATE.md)**
 
 Copy it, fill every section, and share it with the engineering team at least 24 hours before the scoping meeting. The template includes a quality check at the bottom to verify before sharing.
 

@@ -256,4 +256,4 @@ Machine-evaluable pass/fail criteria. A TRD is ready for review when ALL pass.
 
 ## 8. Reference
 
-- Template: [TRD_TEMPLATE.md](./TRD_TEMPLATE.md)
+- Template: [TRD_TEMPLATE.md](../templates/TRD_TEMPLATE.md)

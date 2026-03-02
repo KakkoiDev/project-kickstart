@@ -4,7 +4,7 @@ set -euo pipefail
 # project-kickstart installer
 # Usage: curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash
 
-INSTALL_DIR="$HOME/.project-kickstart"
+INSTALL_DIR="${PROJECT_KICKSTART_DIR:-$HOME/.project-kickstart}"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 REPO="KakkoiDev/project-kickstart"
 BRANCH="main"
@@ -21,9 +21,30 @@ else
   GREEN='' YELLOW='' RED='' BOLD='' NC=''
 fi
 
-info()  { printf "${GREEN}[ok]${NC} %s\n" "$1"; }
-warn()  { printf "${YELLOW}[!!]${NC} %s\n" "$1"; }
-error() { printf "${RED}[error]${NC} %s\n" "$1" >&2; exit 1; }
+info()  { printf '%s[ok]%s %s\n' "$GREEN" "$NC" "$1"; }
+warn()  { printf '%s[!!]%s %s\n' "$YELLOW" "$NC" "$1"; }
+error() { printf '%s[error]%s %s\n' "$RED" "$NC" "$1" >&2; exit 1; }
+
+# --- Help ---
+if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
+  printf "project-kickstart installer\n\n"
+  printf "Usage:\n"
+  printf "  curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash\n"
+  printf "  bash install.sh [--help] [--uninstall]\n\n"
+  printf "Environment:\n"
+  printf "  PROJECT_KICKSTART_DIR  Install location (default: \$HOME/.project-kickstart)\n"
+  exit 0
+fi
+
+# --- Uninstall ---
+if [[ "${1:-}" == "--uninstall" ]]; then
+  printf "Removing project-kickstart...\n"
+  rm -rf "$INSTALL_DIR"
+  rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-scope"
+  rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-trd"
+  info "Uninstalled."
+  exit 0
+fi
 
 # --- Templates ---
 TEMPLATES=(
@@ -52,14 +73,14 @@ download() {
   if command -v curl &>/dev/null; then
     curl -fsSL "$url" -o "$dest"
   elif command -v wget &>/dev/null; then
-    wget -qO "$dest" "$url"
+    wget -qO "$dest" "$url" || { rm -f "$dest"; return 1; }
   else
     error "Neither curl nor wget found. Install one and retry."
   fi
 }
 
 # --- Main ---
-printf "\n${BOLD}project-kickstart installer${NC}\n\n"
+printf '\n%sproject-kickstart installer%s\n\n' "$BOLD" "$NC"
 
 # 1. Install templates
 printf "Installing templates to %s/templates/\n" "$INSTALL_DIR"
@@ -84,7 +105,7 @@ if [ -d "$HOME/.claude" ]; then
     info "/""$skill"
   done
 else
-  warn "~/.claude not found. Skipping Claude Code skills."
+  warn "\$HOME/.claude not found. Skipping Claude Code skills."
   warn "Run 'claude' once to initialize, then re-run this installer."
 fi
 
@@ -92,18 +113,18 @@ fi
 printf "%s" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$INSTALL_DIR/.installed"
 
 # 5. Summary
-printf "\n${BOLD}Done.${NC}\n\n"
+printf '\n%sDone.%s\n\n' "$BOLD" "$NC"
 printf "  Templates + guides: %s/\n" "$INSTALL_DIR"
 if [ -d "$HOME/.claude" ]; then
   printf "  Claude Code skills: /project-kickstart-scope, /project-kickstart-trd\n"
 fi
 printf "\n"
-printf "  ${BOLD}Workflow:${NC}\n"
+printf '  %sWorkflow:%s\n' "$BOLD" "$NC"
 printf "  Brief (human) -> /project-kickstart-scope -> Checklist -> /project-kickstart-trd -> TRD -> PRs\n"
 printf "\n"
 
 # 6. Optional: git-dispatch
-printf "  ${BOLD}Optional:${NC} git-dispatch (TRD tasks -> stacked PRs)\n"
+printf '  %sOptional:%s git-dispatch (TRD tasks -> stacked PRs)\n' "$BOLD" "$NC"
 printf "  Install separately: https://github.com/KakkoiDev/git-dispatch\n"
 printf "  Without it: create one branch per TRD task manually.\n"
 printf "\n"
