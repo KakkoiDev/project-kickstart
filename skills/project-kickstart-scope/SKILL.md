@@ -14,18 +14,33 @@ All reference documents live in `~/.project-kickstart/`:
 | Document | Purpose |
 |----------|---------|
 | `templates/PROJECT_SCOPING_CHECKLIST.md` | Template to fill (10 parts, ~30 questions) |
+| `templates/FEATURE_SCOPING_CHECKLIST.md` | Lightweight template for single features (7 sections) |
 | `templates/PROJECT_BRIEF_TEMPLATE.md` | Expected input format |
+| `templates/internal/INTERNAL_PROJECT_SCOPING.md` | Internal companion for project scoping |
+| `templates/internal/INTERNAL_FEATURE_SCOPING.md` | Internal companion for feature scoping |
+| `templates/internal/INTERNAL_PROJECT_BRIEF.md` | Internal brief analysis (read if available) |
 | `guides/PROJECT_SCOPING_GUIDE.md` | Engineer's context for each question area |
+| `guides/FEATURE_SCOPING_GUIDE.md` | When to use feature vs project checklist |
 | `guides/PROJECT_BRIEFING_GUIDE.md` | PM's context (helps understand their perspective) |
 
 ## Usage
 
 ```
 /project-kickstart-scope                        # Interactive: agent asks for brief, then walks through questions
+/project-kickstart-scope --feature              # Feature scope: uses lightweight FEATURE_SCOPING_CHECKLIST
 /project-kickstart-scope <path-to-brief>        # Brief provided, pre-fills overlapping answers
 /project-kickstart-scope <path-to-notes>        # Post-meeting: extract answers from meeting notes/transcript
 /project-kickstart-scope <brief> <notes>        # Both: cross-reference brief with meeting notes
 ```
+
+### Feature vs Project Detection
+
+The skill determines which checklist template to use:
+
+1. **Explicit flag:** `--feature` -> uses `FEATURE_SCOPING_CHECKLIST.md`
+2. **Input is a single ticket / user story** -> feature scope (7 sections, no sign-off)
+3. **Input is a multi-feature brief** -> project scope (10 parts, dual sign-off)
+4. **No input / unclear** -> ask the user which type
 
 ## Modes
 
@@ -46,8 +61,17 @@ The agent detects the mode from the input:
 ### Step 1: Read References
 
 Read these files before starting:
+
+**For project scope (default):**
 - `~/.project-kickstart/templates/PROJECT_SCOPING_CHECKLIST.md`
 - `~/.project-kickstart/guides/PROJECT_SCOPING_GUIDE.md`
+
+**For feature scope (`--feature`):**
+- `~/.project-kickstart/templates/FEATURE_SCOPING_CHECKLIST.md`
+- `~/.project-kickstart/guides/FEATURE_SCOPING_GUIDE.md`
+
+**Always (if available):**
+- `~/.project-kickstart/templates/internal/INTERNAL_PROJECT_BRIEF.md` notes for this project (risk register, assumptions, hidden stakeholders)
 
 ### Step 2: Gather Context
 
@@ -96,7 +120,7 @@ Produce a completed `PROJECT_SCOPING_CHECKLIST.md` with:
 - Part 10 next steps checked based on what was discussed
 - Sign-off section ready (names filled, dates blank for actual signing)
 
-Write the output to the user's working directory as `SCOPING_CHECKLIST.md` (or a path they specify).
+Write the output to the user's working directory as `SCOPING_CHECKLIST.md` (or `FEATURE_SCOPING_CHECKLIST.md` for feature scope, or a path they specify).
 
 After the checklist, add a summary:
 
@@ -109,6 +133,39 @@ After the checklist, add a summary:
 **Pre-filled from brief:** {count} answers confirmed
 **Key risks identified:** {list}
 **Next step:** {recommendation: write TRD, run spike, resolve open questions first}
+```
+
+### Step 6: Generate Internal Notes
+
+After the human checklist output, generate the internal companion document.
+
+**For project scope:** Fill `INTERNAL_PROJECT_SCOPING.md` with:
+- Answer quality assessment (rate each checklist answer: completeness, confidence, gaps)
+- Reading between the lines (interpretation notes, stakeholder dynamics, unstated priorities)
+- Technical feasibility notes (per story/item: feasibility, complexity, risk, spike needed)
+- Architecture implications (patterns, existing system impact, data flow, API surface)
+- Scope pressure points (items likely to expand, phase 2 candidates)
+- Estimation inputs (confidence level, analogous work, complexity multipliers, preliminary range)
+- Open questions triage (severity, what it blocks, source)
+- Agent handoff (task agent context, TRD skill context, memo agent context)
+
+**For feature scope:** Fill `INTERNAL_FEATURE_SCOPING.md` with:
+- Edge case deep dive (data, state machine, integration, user behavior edge cases)
+- Implementation hints (approach, files to read, patterns to follow/avoid)
+- Test strategy preview (critical scenarios, regression risk, test data needs)
+- Dependency risk assessment (API stability, fallbacks, hidden dependencies)
+- Scope creep watchlist (expansion signals, pre-written "phase 2" responses, boundary lines)
+- Agent routing (task, TRD skill, qa agent context)
+
+Write the internal notes to the working directory alongside the human checklist.
+
+### Session Summary
+
+List both output files:
+
+```
+Human checklist:  {path}
+Internal notes:   {path}
 ```
 
 ## Push-Back Rules

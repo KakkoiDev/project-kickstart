@@ -14,9 +14,14 @@ All reference documents live in `~/.project-kickstart/`:
 | Document | Purpose |
 |----------|---------|
 | `templates/TRD_TEMPLATE.md` | Structure to follow (copy and fill) |
+| `templates/internal/INTERNAL_TRD.md` | Internal companion template (implementation notes, design decisions) |
 | `guides/TRD_GUIDE.md` | MUST/SHOULD rules, quality checklist, AI-author obligations |
 | `templates/PROJECT_BRIEF_TEMPLATE.md` | Expected format of the input brief |
 | `templates/PROJECT_SCOPING_CHECKLIST.md` | Expected format of the input checklist |
+| `templates/FEATURE_SCOPING_CHECKLIST.md` | Expected format of the feature checklist |
+| `templates/internal/INTERNAL_PROJECT_SCOPING.md` | Internal scoping notes (read if available) |
+| `templates/internal/INTERNAL_FEATURE_SCOPING.md` | Internal feature scoping notes (read if available) |
+| `templates/internal/INTERNAL_PROJECT_BRIEF.md` | Internal brief analysis (read if available) |
 
 ## Usage
 
@@ -52,7 +57,10 @@ Before writing, build a mental model:
 
 1. **Extract from the brief:** problem, goal, success criteria, user stories (prioritized), constraints, out-of-scope items, open questions
 2. **Extract from the checklist:** agreed decisions, NFR answers (Part 8), dependency answers, security answers, identified risks
-3. **Identify gaps:** anything the brief/checklist does not answer that the TRD requires. Each gap becomes an Open Question.
+3. **Read internal notes (if available):**
+   - `INTERNAL_PROJECT_SCOPING.md` or `INTERNAL_FEATURE_SCOPING.md`: architecture implications -> task structure, estimation inputs -> effort sizing, open questions triage -> TRD open questions, risk assessment -> dependencies
+   - `INTERNAL_PROJECT_BRIEF.md`: risk register -> open questions, assumptions log -> open questions, constraint analysis -> NFRs and dependencies
+4. **Identify gaps:** anything the brief/checklist/internal notes do not answer that the TRD requires. Each gap becomes an Open Question.
 
 ### Step 4: Generate TRD
 
@@ -113,15 +121,32 @@ Additional checks:
 - No tests with only happy-path coverage
 - Dependency graph has no cycles
 
-### Step 6: Present
+### Step 6: Generate Internal TRD Notes
 
-Output the complete TRD. After the TRD, add a summary section:
+After the human TRD passes self-check, generate the internal companion document using `INTERNAL_TRD.md` template:
+
+- **Design decisions log:** Every significant choice made during TRD authoring - alternatives, rationale, reversibility
+- **Task implementation notes:** Per T-n: approach, gotchas, code pointers, estimated LOC, review focus
+- **Dependency contingencies:** Fallback plans if delayed, cancelled, or API changes
+- **Risk mitigation playbook:** Trigger condition, detection method, response, escalation per risk
+- **Rollback rehearsal:** Step-by-step procedure, data recovery notes, communication template
+- **Cross-TRD context:** Related TRDs, shared code conflicts, sequencing constraints
+- **Post-ship monitoring:** 24h, 1 week, 30 day checkpoints, dashboard/alert setup
+- **Agent routing:** Context for qa, review, on-call, learn agents
+
+Write the internal notes to the working directory alongside the human TRD.
+
+### Step 7: Present
+
+Output both documents. After the TRD, add a summary section:
 
 ```
 ---
 ## Generation Notes
 
 **Inputs used:** [list files read]
+**Human TRD:** [path]
+**Internal notes:** [path]
 **Open questions:** [count] items need human input
 **Assumptions made:** [list any, with justification]
 **Quality checklist:** [pass count]/16 passed

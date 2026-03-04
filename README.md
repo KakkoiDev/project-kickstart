@@ -2,7 +2,7 @@
 
 Go from "new project" to "first line of code" without losing scope, time, or trust.
 
-3 guides you read once. 4 templates you copy per project. 2 AI skills that automate the heavy lifting.
+3 guides you read once. 5 templates you copy per project. 5 internal templates for AI reasoning. 2 AI skills + 2 AI agents that automate the heavy lifting.
 
 ## Install
 
@@ -12,14 +12,17 @@ curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/in
 
 This installs:
 - **Templates + guides** to `~/.project-kickstart/`
+- **Internal templates** to `~/.project-kickstart/templates/internal/`
 - **Claude Code skills** to `~/.claude/skills/` (if Claude Code is installed)
+- **Claude Code agents** to `~/.claude/agents/` (if Claude Code is installed)
 
 Re-run to update to the latest version.
 
 ## Workflow
 
 ```
-Brief (human) -> /project-kickstart-scope -> Checklist -> /project-kickstart-trd -> TRD -> PRs
+Brief (human) -> /project-kickstart-scope -> Checklist + Internal Notes -> /project-kickstart-trd -> TRD + Internal Notes -> PRs
+Feature:         /project-kickstart-scope --feature -> Feature Checklist + Internal Notes -> /project-kickstart-trd -> TRD + Internal Notes -> PRs
 ```
 
 | Phase | Who | What | Output |
@@ -34,10 +37,20 @@ Brief (human) -> /project-kickstart-scope -> Checklist -> /project-kickstart-trd
 
 | Skill | Input | Output |
 |-------|-------|--------|
-| `/project-kickstart-scope` | Brief + meeting (live or notes) | Filled scoping checklist |
-| `/project-kickstart-trd` | Brief + checklist | Complete TRD |
+| `/project-kickstart-scope` | Brief + meeting (live or notes) | Filled scoping checklist + internal notes |
+| `/project-kickstart-scope --feature` | Ticket + meeting (live or notes) | Filled feature checklist + internal notes |
+| `/project-kickstart-trd` | Brief + checklist | Complete TRD + internal notes |
 
 The AI writes, the human reviews. Skills enforce every rule from the guides: no vague NFRs, no skipped questions, no blank acceptance criteria.
+
+### Dual Output
+
+Every skill produces two documents:
+
+- **Human version** (shared with client/PM/team): clean, scannable, decisions only
+- **Internal version** (kept internally): reasoning, risks, assumptions, implementation hints for AI agents
+
+Human versions live at `templates/`. Internal versions live at `templates/internal/`. The internal documents feed downstream agents (task, qa, review) with context that does not belong in client-facing deliverables.
 
 ### Without Claude Code
 
@@ -67,6 +80,7 @@ Without git-dispatch: create one branch per TRD task manually. The task numberin
 |----------|----------|---------|
 | [Briefing Guide](guides/PROJECT_BRIEFING_GUIDE.md) | PM / Client | How to prepare for the scoping meeting |
 | [Scoping Guide](guides/PROJECT_SCOPING_GUIDE.md) | Engineer | How to run scoping conversations and prevent scope creep |
+| [Feature Scoping Guide](guides/FEATURE_SCOPING_GUIDE.md) | Engineer / AI | When and how to use the lightweight feature checklist |
 | [TRD Guide](guides/TRD_GUIDE.md) | Engineer / AI | Rules for writing TRDs, quality checklist, AI-author obligations |
 
 ### Templates (copy per project)
@@ -75,8 +89,28 @@ Without git-dispatch: create one branch per TRD task manually. The task numberin
 |----------|----------|---------|
 | [Brief Template](templates/PROJECT_BRIEF_TEMPLATE.md) | PM / Client | Problem, success criteria, user stories, constraints, out of scope |
 | [Scoping Checklist](templates/PROJECT_SCOPING_CHECKLIST.md) | Both | 30+ questions for the kickoff meeting, dual sign-off |
+| [Feature Scoping Checklist](templates/FEATURE_SCOPING_CHECKLIST.md) | Engineer / AI | Lightweight scoping for single features/tickets. 7 sections, edge-case focused |
 | [TRD Template](templates/TRD_TEMPLATE.md) | Engineer / AI | Full technical spec: tasks, NFRs, testing, rollback, security |
 | [Change Request](templates/CHANGE_REQUEST.md) | Both | Scope changes mid-project, quick and full formats |
+
+### Internal Templates (AI reasoning layer)
+
+Internal companions to each human template. Not shared with clients. Feed downstream AI agents with reasoning, risks, and implementation context.
+
+| Document | Companion to | Key additions |
+|----------|-------------|---------------|
+| [Internal Brief](templates/internal/INTERNAL_PROJECT_BRIEF.md) | Brief Template | Problem analysis, risk register, assumptions log, agent routing |
+| [Internal Scoping](templates/internal/INTERNAL_PROJECT_SCOPING.md) | Scoping Checklist | Answer quality, feasibility notes, estimation inputs, architecture implications |
+| [Internal Feature Scoping](templates/internal/INTERNAL_FEATURE_SCOPING.md) | Feature Checklist | Edge case deep dive, implementation hints, test strategy, scope creep watchlist |
+| [Internal TRD](templates/internal/INTERNAL_TRD.md) | TRD Template | Design decisions, task notes, rollback rehearsal, post-ship monitoring |
+| [Internal Change Request](templates/internal/INTERNAL_CHANGE_REQUEST.md) | Change Request | Change origin analysis, impact deep dive, scope health score |
+
+### Agents
+
+| Agent | Role |
+|-------|------|
+| [project-kickstart-scope](agents/project-kickstart-scope.md) | Scoping facilitator producing dual output. Detects feature vs project scope. |
+| [project-kickstart-trd](agents/project-kickstart-trd.md) | TRD generator producing dual output. Consumes internal scoping notes. |
 
 ## Principles
 
