@@ -2,6 +2,8 @@
 set -euo pipefail
 
 INSTALL_DIR="${PROJECT_KICKSTART_DIR:-$HOME/.project-kickstart}"
+CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
+CLAUDE_AGENTS_DIR="$HOME/.claude/agents"
 REPO="KakkoiDev/project-kickstart"
 BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
@@ -31,6 +33,23 @@ TEMPLATES=(
   "change|templates/CHANGE_REQUEST.md|CHANGE_REQUEST.md|templates/internal/INTERNAL_CHANGE_REQUEST.md|INTERNAL_CHANGE_REQUEST.md"
 )
 
+GUIDES=(
+  "guides/PROJECT_BRIEFING_GUIDE.md|BRIEFING_GUIDE.md"
+  "guides/PROJECT_SCOPING_GUIDE.md|SCOPING_GUIDE.md"
+  "guides/FEATURE_SCOPING_GUIDE.md|FEATURE_SCOPING_GUIDE.md"
+  "guides/TRD_GUIDE.md|TRD_GUIDE.md"
+)
+
+SKILLS=(
+  "project-kickstart-scope"
+  "project-kickstart-trd"
+)
+
+AGENTS=(
+  "project-kickstart-scope.md"
+  "project-kickstart-trd.md"
+)
+
 # --- Flags ---
 FORCE=false
 INTERNAL=false
@@ -38,10 +57,11 @@ OUT_DIR="."
 
 # --- Functions ---
 
-resolve_file() {
+download() {
   local rel_path="$1" dest="$2"
-  local local_path="$INSTALL_DIR/$rel_path"
+  mkdir -p "$(dirname "$dest")"
 
+  local local_path="$INSTALL_DIR/$rel_path"
   if [ -f "$local_path" ]; then
     cp "$local_path" "$dest"
     return 0
@@ -57,33 +77,31 @@ resolve_file() {
   return 1
 }
 
+copy_file() {
+  local src="$1" dest="$2"
+  local name
+  name="$(basename "$dest")"
+
+  if [ -f "$dest" ] && [ "$FORCE" = false ]; then
+    warn "$name already exists. Use --force to overwrite."
+  elif download "$src" "$dest"; then
+    info "$name"
+  else
+    error "Failed to fetch $src"
+  fi
+}
+
 copy_template() {
   local cmd="$1"
 
   for entry in "${TEMPLATES[@]}"; do
     IFS='|' read -r name src out int_src int_out <<< "$entry"
     if [ "$name" = "$cmd" ]; then
-      local dest="$OUT_DIR/$out"
-
       mkdir -p "$OUT_DIR"
-
-      if [ -f "$dest" ] && [ "$FORCE" = false ]; then
-        warn "$out already exists. Use --force to overwrite."
-      elif resolve_file "$src" "$dest"; then
-        info "$out"
-      else
-        error "Failed to fetch $src"
-      fi
+      copy_file "$src" "$OUT_DIR/$out"
 
       if [ "$INTERNAL" = true ]; then
-        local int_dest="$OUT_DIR/$int_out"
-        if [ -f "$int_dest" ] && [ "$FORCE" = false ]; then
-          warn "$int_out already exists. Use --force to overwrite."
-        elif resolve_file "$int_src" "$int_dest"; then
-          info "$int_out"
-        else
-          error "Failed to fetch $int_src"
-        fi
+        copy_file "$int_src" "$OUT_DIR/$int_out"
       fi
 
       return 0
@@ -100,21 +118,49 @@ cmd_init() {
   done
 }
 
-cmd_list() {
-  printf '%sAvailable templates:%s\n\n' "$BOLD" "$NC"
-  printf '  %-12s %-40s %s\n' "Command" "Source" "Copies as"
-  printf '  %-12s %-40s %s\n' "-------" "------" "---------"
-  for entry in "${TEMPLATES[@]}"; do
-    IFS='|' read -r name src out _ _ <<< "$entry"
-    printf '  %-12s %-40s %s\n' "$name" "$src" "$out"
+cmd_guides() {
+  mkdir -p "$OUT_DIR"
+  for entry in "${GUIDES[@]}"; do
+    IFS='|' read -r src out <<< "$entry"
+    copy_file "$src" "$OUT_DIR/$out"
   done
-  printf '\n  Use --internal to also copy internal companion templates.\n'
+}
+
+cmd_skills() {
+  if [ ! -d "$HOME/.claude" ]; then
+    error "\$HOME/.claude not found. Run 'claude' once to initialize, then retry."
+  fi
+
+  printf "Installing skills to %s/\n" "$CLAUDE_SKILLS_DIR"
+  for skill in "${SKILLS[@]}"; do
+    if download "skills/$skill/SKILL.md" "$CLAUDE_SKILLS_DIR/$skill/SKILL.md"; then
+      info "/$skill"
+    else
+      warn "Failed: $skill"
+    fi
+  done
+}
+
+cmd_agents() {
+  if [ ! -d "$HOME/.claude" ]; then
+    error "\$HOME/.claude not found. Run 'claude' once to initialize, then retry."
+  fi
+
+  printf "Installing agents to %s/\n" "$CLAUDE_AGENTS_DIR"
+  for agent in "${AGENTS[@]}"; do
+    if download "agents/$agent" "$CLAUDE_AGENTS_DIR/$agent"; then
+      info "$agent"
+    else
+      warn "Failed: $agent"
+    fi
+  done
 }
 
 cmd_update() {
   printf "Updating local cache in %s/\n" "$INSTALL_DIR"
+
   for entry in "${TEMPLATES[@]}"; do
-    IFS='|' read -r name src _ int_src _ <<< "$entry"
+    IFS='|' read -r _ src _ int_src _ <<< "$entry"
     local dest="$INSTALL_DIR/$src"
     local int_dest="$INSTALL_DIR/$int_src"
     mkdir -p "$(dirname "$dest")" "$(dirname "$int_dest")"
@@ -133,7 +179,49 @@ cmd_update() {
       wget -qO "$int_dest" "$url" 2>/dev/null && info "$int_src" || warn "Failed: $int_src"
     fi
   done
+
+  for entry in "${GUIDES[@]}"; do
+    IFS='|' read -r src _ <<< "$entry"
+    local dest="$INSTALL_DIR/$src"
+    mkdir -p "$(dirname "$dest")"
+
+    local url="$BASE_URL/$src"
+    if command -v curl &>/dev/null; then
+      curl -fsSL "$url" -o "$dest" 2>/dev/null && info "$src" || warn "Failed: $src"
+    elif command -v wget &>/dev/null; then
+      wget -qO "$dest" "$url" 2>/dev/null && info "$src" || warn "Failed: $src"
+    fi
+  done
+
   info "Cache updated."
+}
+
+cmd_list() {
+  printf '%sTemplates:%s\n\n' "$BOLD" "$NC"
+  printf '  %-12s %s\n' "Command" "Copies as"
+  printf '  %-12s %s\n' "-------" "---------"
+  for entry in "${TEMPLATES[@]}"; do
+    IFS='|' read -r name _ out _ _ <<< "$entry"
+    printf '  %-12s %s\n' "$name" "$out"
+  done
+
+  printf '\n%sGuides:%s\n\n' "$BOLD" "$NC"
+  for entry in "${GUIDES[@]}"; do
+    IFS='|' read -r _ out <<< "$entry"
+    printf '  %s\n' "$out"
+  done
+
+  printf '\n%sSkills:%s\n\n' "$BOLD" "$NC"
+  for skill in "${SKILLS[@]}"; do
+    printf '  /%s\n' "$skill"
+  done
+
+  printf '\n%sAgents:%s\n\n' "$BOLD" "$NC"
+  for agent in "${AGENTS[@]}"; do
+    printf '  %s\n' "$agent"
+  done
+
+  printf '\n  Use --internal to also copy internal companion templates.\n'
 }
 
 cmd_help() {
@@ -143,14 +231,17 @@ pkstart - Copy project-kickstart templates into your project
 Usage: pkstart <command> [flags]
 
 Commands:
-  init              Copy all 5 templates
+  init              Copy all 5 templates into current dir
   brief             Copy project brief
   scope             Copy project scoping checklist
   feature           Copy feature scoping checklist
   trd               Copy TRD template
   change            Copy change request template
-  list              List available templates
-  update            Re-download templates from GitHub to local cache
+  guides            Copy all 4 guides into current dir
+  skills            Install Claude Code skills to ~/.claude/skills/
+  agents            Install Claude Code agents to ~/.claude/agents/
+  list              List all available files
+  update            Re-download all files from GitHub to local cache
 
 Flags:
   --internal        Also copy the internal companion template(s)
@@ -163,11 +254,13 @@ Examples:
   pkstart brief                   # Just the brief
   pkstart trd --internal          # TRD + internal companion
   pkstart init --force --internal # Everything, overwrite existing
+  pkstart skills                  # Install Claude Code skills
+  pkstart agents                  # Install Claude Code agents
+  pkstart guides                  # Copy guides into current dir
 HELP
 }
 
 # --- Parse args ---
-CMD=""
 POSITIONAL=()
 
 while [ $# -gt 0 ]; do
@@ -191,6 +284,9 @@ fi
 # --- Dispatch ---
 case "$CMD" in
   init)    cmd_init ;;
+  guides)  cmd_guides ;;
+  skills)  cmd_skills ;;
+  agents)  cmd_agents ;;
   list)    cmd_list ;;
   update)  cmd_update ;;
   brief|scope|feature|trd|change) copy_template "$CMD" ;;

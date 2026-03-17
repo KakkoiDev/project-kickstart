@@ -10,30 +10,29 @@ Go from "new project" to "first line of code" without losing scope, time, or tru
 curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash
 ```
 
-This installs:
-- **Templates + guides** to `~/.project-kickstart/`
-- **Internal templates** to `~/.project-kickstart/templates/internal/`
-- **`pkstart` CLI** to `~/.local/bin/` (copy templates into any project)
-- **Claude Code skills** to `~/.claude/skills/` (if Claude Code is installed)
-- **Claude Code agents** to `~/.claude/agents/` (if Claude Code is installed)
-
-Re-run to update to the latest version.
+This installs the `pkstart` CLI to `~/.local/bin/`. Use it to copy templates, install skills, and set up agents.
 
 ## pkstart CLI
 
-Copy templates from the local cache (or GitHub) into your project directory.
-
 ```bash
+# Templates (copy into your project)
 pkstart init                    # All 5 templates
 pkstart brief                   # Just the brief
 pkstart trd --internal          # TRD + internal companion
 pkstart init --force --internal # Everything, overwrite existing
-pkstart list                    # Show available templates
+
+# Guides, skills, agents
+pkstart guides                  # Copy all 4 guides into current dir
+pkstart skills                  # Install Claude Code skills to ~/.claude/skills/
+pkstart agents                  # Install Claude Code agents to ~/.claude/agents/
+
+# Maintenance
+pkstart list                    # Show all available files
 pkstart update                  # Re-download cache from GitHub
 ```
 
-| Command | Copies |
-|---------|--------|
+| Command | Copies as |
+|---------|-----------|
 | `pkstart brief` | `BRIEF.md` |
 | `pkstart scope` | `SCOPING_CHECKLIST.md` |
 | `pkstart feature` | `FEATURE_CHECKLIST.md` |

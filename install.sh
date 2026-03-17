@@ -5,8 +5,6 @@ set -euo pipefail
 # Usage: curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/install.sh | bash
 
 INSTALL_DIR="${PROJECT_KICKSTART_DIR:-$HOME/.project-kickstart}"
-CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
-CLAUDE_AGENTS_DIR="$HOME/.claude/agents"
 REPO="KakkoiDev/project-kickstart"
 BRANCH="main"
 BASE_URL="https://raw.githubusercontent.com/$REPO/$BRANCH"
@@ -41,52 +39,14 @@ fi
 if [[ "${1:-}" == "--uninstall" ]]; then
   printf "Removing project-kickstart...\n"
   rm -rf "$INSTALL_DIR"
-  rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-scope"
-  rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-trd"
-  rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-scope.md"
-  rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-trd.md"
   rm -f "$HOME/.local/bin/pkstart"
+  rm -rf "$HOME/.claude/skills/project-kickstart-scope"
+  rm -rf "$HOME/.claude/skills/project-kickstart-trd"
+  rm -f "$HOME/.claude/agents/project-kickstart-scope.md"
+  rm -f "$HOME/.claude/agents/project-kickstart-trd.md"
   info "Uninstalled."
   exit 0
 fi
-
-# --- Templates ---
-TEMPLATES=(
-  "PROJECT_BRIEF_TEMPLATE.md"
-  "PROJECT_SCOPING_CHECKLIST.md"
-  "FEATURE_SCOPING_CHECKLIST.md"
-  "TRD_TEMPLATE.md"
-  "CHANGE_REQUEST.md"
-)
-
-# --- Internal Templates ---
-INTERNAL_TEMPLATES=(
-  "INTERNAL_PROJECT_BRIEF.md"
-  "INTERNAL_PROJECT_SCOPING.md"
-  "INTERNAL_FEATURE_SCOPING.md"
-  "INTERNAL_TRD.md"
-  "INTERNAL_CHANGE_REQUEST.md"
-)
-
-# --- Guides ---
-GUIDES=(
-  "PROJECT_BRIEFING_GUIDE.md"
-  "PROJECT_SCOPING_GUIDE.md"
-  "FEATURE_SCOPING_GUIDE.md"
-  "TRD_GUIDE.md"
-)
-
-# --- Skills (Claude Code) ---
-SKILLS=(
-  "project-kickstart-scope"
-  "project-kickstart-trd"
-)
-
-# --- Agents (Claude Code) ---
-AGENTS=(
-  "project-kickstart-scope.md"
-  "project-kickstart-trd.md"
-)
 
 # Detect local repo (when running install.sh from a cloned repo)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -97,7 +57,6 @@ fi
 
 download() {
   local url="$1" dest="$2"
-  # Extract relative path from URL for local copy
   local rel_path="${url#"$BASE_URL/"}"
   mkdir -p "$(dirname "$dest")"
   if [ -n "$LOCAL_REPO" ] && [ -f "$LOCAL_REPO/$rel_path" ]; then
@@ -114,48 +73,7 @@ download() {
 # --- Main ---
 printf '\n%sproject-kickstart installer%s\n\n' "$BOLD" "$NC"
 
-# 1. Install templates
-printf "Installing templates to %s/templates/\n" "$INSTALL_DIR"
-for file in "${TEMPLATES[@]}"; do
-  download "$BASE_URL/templates/$file" "$INSTALL_DIR/templates/$file"
-  info "$file"
-done
-
-# 2. Install internal templates
-printf "\nInstalling internal templates to %s/templates/internal/\n" "$INSTALL_DIR"
-for file in "${INTERNAL_TEMPLATES[@]}"; do
-  download "$BASE_URL/templates/internal/$file" "$INSTALL_DIR/templates/internal/$file"
-  info "$file"
-done
-
-# 3. Install guides
-printf "\nInstalling guides to %s/guides/\n" "$INSTALL_DIR"
-for file in "${GUIDES[@]}"; do
-  download "$BASE_URL/guides/$file" "$INSTALL_DIR/guides/$file"
-  info "$file"
-done
-
-# 4. Install Claude Code skills and agents (optional)
-printf "\n"
-if [ -d "$HOME/.claude" ]; then
-  printf "Installing Claude Code skills to %s/\n" "$CLAUDE_SKILLS_DIR"
-  for skill in "${SKILLS[@]}"; do
-    download "$BASE_URL/skills/$skill/SKILL.md" "$CLAUDE_SKILLS_DIR/$skill/SKILL.md"
-    info "/""$skill"
-  done
-
-  printf "\nInstalling Claude Code agents to %s/\n" "$CLAUDE_AGENTS_DIR"
-  for agent in "${AGENTS[@]}"; do
-    download "$BASE_URL/agents/$agent" "$CLAUDE_AGENTS_DIR/$agent"
-    info "$agent"
-  done
-else
-  warn "\$HOME/.claude not found. Skipping Claude Code skills and agents."
-  warn "Run 'claude' once to initialize, then re-run this installer."
-fi
-
-# 5. Install pkstart CLI
-printf "\nInstalling pkstart CLI\n"
+# Install pkstart CLI
 download "$BASE_URL/bin/pkstart" "$INSTALL_DIR/bin/pkstart"
 chmod +x "$INSTALL_DIR/bin/pkstart"
 LOCAL_BIN="$HOME/.local/bin"
@@ -163,28 +81,17 @@ mkdir -p "$LOCAL_BIN"
 ln -sf "$INSTALL_DIR/bin/pkstart" "$LOCAL_BIN/pkstart"
 info "pkstart -> $LOCAL_BIN/pkstart"
 
-# 6. Write version marker
+# Write version marker
 printf "%s" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$INSTALL_DIR/.installed"
 
-# 7. Summary
+# Summary
 printf '\n%sDone.%s\n\n' "$BOLD" "$NC"
-printf "  Templates + guides:    %s/\n" "$INSTALL_DIR"
-printf "  Internal templates:    %s/templates/internal/\n" "$INSTALL_DIR"
-if [ -d "$HOME/.claude" ]; then
-  printf "  Claude Code skills:    /project-kickstart-scope, /project-kickstart-trd\n"
-  printf "  Claude Code agents:    project-kickstart-scope, project-kickstart-trd\n"
-fi
+printf "  Run 'pkstart --help' to get started.\n"
 printf "\n"
-printf '  %sWorkflow:%s\n' "$BOLD" "$NC"
-printf "  Brief (human) -> /project-kickstart-scope -> Checklist + Internal Notes -> /project-kickstart-trd -> TRD + Internal Notes -> PRs\n"
-printf "  Feature:         /project-kickstart-scope --feature -> Feature Checklist + Internal Notes -> /project-kickstart-trd -> TRD + Internal Notes -> PRs\n"
-printf "\n"
-
-printf "  pkstart CLI:           pkstart init (copy templates into any project)\n"
-printf "\n"
-
-# 8. Optional: git-dispatch
-printf '  %sOptional:%s git-dispatch (TRD tasks -> stacked PRs)\n' "$BOLD" "$NC"
-printf "  Install separately: https://github.com/KakkoiDev/git-dispatch\n"
-printf "  Without it: create one branch per TRD task manually.\n"
+printf '  %sQuick start:%s\n' "$BOLD" "$NC"
+printf "  pkstart init              Copy all templates into your project\n"
+printf "  pkstart skills            Install Claude Code skills\n"
+printf "  pkstart agents            Install Claude Code agents\n"
+printf "  pkstart guides            Copy guides to current dir\n"
+printf "  pkstart update            Download latest templates from GitHub\n"
 printf "\n"
