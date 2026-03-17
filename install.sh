@@ -45,6 +45,7 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-trd"
   rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-scope.md"
   rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-trd.md"
+  rm -f "$HOME/.local/bin/pkstart"
   info "Uninstalled."
   exit 0
 fi
@@ -142,10 +143,19 @@ else
   warn "Run 'claude' once to initialize, then re-run this installer."
 fi
 
-# 5. Write version marker
+# 5. Install pkstart CLI
+printf "\nInstalling pkstart CLI\n"
+download "$BASE_URL/bin/pkstart" "$INSTALL_DIR/bin/pkstart"
+chmod +x "$INSTALL_DIR/bin/pkstart"
+LOCAL_BIN="$HOME/.local/bin"
+mkdir -p "$LOCAL_BIN"
+ln -sf "$INSTALL_DIR/bin/pkstart" "$LOCAL_BIN/pkstart"
+info "pkstart -> $LOCAL_BIN/pkstart"
+
+# 6. Write version marker
 printf "%s" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$INSTALL_DIR/.installed"
 
-# 6. Summary
+# 7. Summary
 printf '\n%sDone.%s\n\n' "$BOLD" "$NC"
 printf "  Templates + guides:    %s/\n" "$INSTALL_DIR"
 printf "  Internal templates:    %s/templates/internal/\n" "$INSTALL_DIR"
@@ -159,7 +169,10 @@ printf "  Brief (human) -> /project-kickstart-scope -> Checklist + Internal Note
 printf "  Feature:         /project-kickstart-scope --feature -> Feature Checklist + Internal Notes -> /project-kickstart-trd -> TRD + Internal Notes -> PRs\n"
 printf "\n"
 
-# 7. Optional: git-dispatch
+printf "  pkstart CLI:           pkstart init (copy templates into any project)\n"
+printf "\n"
+
+# 8. Optional: git-dispatch
 printf '  %sOptional:%s git-dispatch (TRD tasks -> stacked PRs)\n' "$BOLD" "$NC"
 printf "  Install separately: https://github.com/KakkoiDev/git-dispatch\n"
 printf "  Without it: create one branch per TRD task manually.\n"

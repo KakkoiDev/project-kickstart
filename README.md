@@ -13,10 +13,34 @@ curl -fsSL https://raw.githubusercontent.com/KakkoiDev/project-kickstart/main/in
 This installs:
 - **Templates + guides** to `~/.project-kickstart/`
 - **Internal templates** to `~/.project-kickstart/templates/internal/`
+- **`pkstart` CLI** to `~/.local/bin/` (copy templates into any project)
 - **Claude Code skills** to `~/.claude/skills/` (if Claude Code is installed)
 - **Claude Code agents** to `~/.claude/agents/` (if Claude Code is installed)
 
 Re-run to update to the latest version.
+
+## pkstart CLI
+
+Copy templates from the local cache (or GitHub) into your project directory.
+
+```bash
+pkstart init                    # All 5 templates
+pkstart brief                   # Just the brief
+pkstart trd --internal          # TRD + internal companion
+pkstart init --force --internal # Everything, overwrite existing
+pkstart list                    # Show available templates
+pkstart update                  # Re-download cache from GitHub
+```
+
+| Command | Copies |
+|---------|--------|
+| `pkstart brief` | `BRIEF.md` |
+| `pkstart scope` | `SCOPING_CHECKLIST.md` |
+| `pkstart feature` | `FEATURE_CHECKLIST.md` |
+| `pkstart trd` | `TRD.md` |
+| `pkstart change` | `CHANGE_REQUEST.md` |
+
+Add `--internal` to also copy the AI companion template. Add `--dir <path>` to change the output directory.
 
 ## Workflow
 
