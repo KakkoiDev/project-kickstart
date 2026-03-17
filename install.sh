@@ -88,10 +88,21 @@ AGENTS=(
   "project-kickstart-trd.md"
 )
 
+# Detect local repo (when running install.sh from a cloned repo)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOCAL_REPO=""
+if [ -f "$SCRIPT_DIR/bin/pkstart" ] && [ -d "$SCRIPT_DIR/templates" ]; then
+  LOCAL_REPO="$SCRIPT_DIR"
+fi
+
 download() {
   local url="$1" dest="$2"
+  # Extract relative path from URL for local copy
+  local rel_path="${url#"$BASE_URL/"}"
   mkdir -p "$(dirname "$dest")"
-  if command -v curl &>/dev/null; then
+  if [ -n "$LOCAL_REPO" ] && [ -f "$LOCAL_REPO/$rel_path" ]; then
+    cp "$LOCAL_REPO/$rel_path" "$dest"
+  elif command -v curl &>/dev/null; then
     curl -fsSL "$url" -o "$dest"
   elif command -v wget &>/dev/null; then
     wget -qO "$dest" "$url" || { rm -f "$dest"; return 1; }
