@@ -70,7 +70,7 @@
 
 ### Step-by-Step Procedure
 
-<!-- Concrete rollback steps, not just "revert the deploy." -->
+<!-- Concrete rollback procedure using the mechanisms defined in TRD Section 6. The TRD lists WHAT can be reverted; this section documents HOW, step by step. -->
 
 1. {step}
 2. {step}

@@ -307,19 +307,7 @@ List the top user stories. Mark priority: P0 (must have), P1 (should have), P2 (
 
 ---
 
-## Part 9: Open Questions
-
-*Anything unresolved. Every question gets an owner and a due date.*
-
-| # | Question | Owner | Due date |
-|---|----------|-------|----------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-
----
-
-## Part 10: Next Steps
+## Part 9: Next Steps
 
 *Agreed at the end of the meeting.*
 
@@ -327,7 +315,7 @@ List the top user stories. Mark priority: P0 (must have), P1 (should have), P2 (
 - [ ] **PRD needs updates** / Owner: ___, Due: ___
 - [ ] **TRD to be written** / Owner: ___, Due: ___
 - [ ] **Design work needed** / Owner: ___, Due: ___
-- [ ] **Open questions to be resolved** / See Part 9
+- [ ] **Open questions to be resolved** / See inline "Unknown (owner: X, due: Y)" markers above
 
 ---
 

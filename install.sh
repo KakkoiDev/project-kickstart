@@ -43,6 +43,8 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   rm -rf "$INSTALL_DIR"
   rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-scope"
   rm -rf "$CLAUDE_SKILLS_DIR/project-kickstart-trd"
+  rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-scope.md"
+  rm -f "$CLAUDE_AGENTS_DIR/project-kickstart-trd.md"
   info "Uninstalled."
   exit 0
 fi

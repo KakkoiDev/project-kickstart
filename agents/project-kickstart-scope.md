@@ -66,7 +66,7 @@ Present one section at a time. Push back on vague answers (see push-back rules i
 
 ### Step 4: Handle Gaps
 
-Format unknowns as `Unknown (owner: {name}, due: {date})`. Collect into Open Questions.
+Format unknowns as `Unknown (owner: {name}, due: {date})` inline. Collect resolution items into Next Steps.
 
 ### Step 5: Generate Human Output
 

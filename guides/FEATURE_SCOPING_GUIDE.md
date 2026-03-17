@@ -32,16 +32,11 @@ The full checklist (10 parts, ~30 questions) was designed for project-level scop
 - **Constraints** (deadline, team, technical decisions)
 - **Edge cases** (the most valuable section)
 - **Dependencies** (who else is affected)
-- **People** (who decides, who builds, how we communicate)
 - **Open questions** (consolidated gap list)
 
 ## Integration with Skills and Agents
 
 ### Skill: `/project-kickstart-scope`
-
-The existing skill (`skills/project-kickstart-scope/SKILL.md`) walks through the full `PROJECT_SCOPING_CHECKLIST.md`. To support the feature checklist:
-
-**Option A (recommended): Add a flag to the existing skill.**
 
 ```
 /project-kickstart-scope --feature              # Uses FEATURE_SCOPING_CHECKLIST.md
@@ -52,15 +47,6 @@ The skill detects which template to use based on:
 1. Explicit `--feature` flag, or
 2. Input analysis: if the input is a single ticket/user story (not a multi-feature brief), default to the feature checklist.
 
-Changes needed in `skills/project-kickstart-scope/SKILL.md`:
-- Add reference to `templates/FEATURE_SCOPING_CHECKLIST.md`
-- Add detection logic for feature vs project scope
-- Adjust the walkthrough: 7 sections instead of 10, no sign-off
-
-**Option B: Separate skill.**
-
-Create `skills/project-kickstart-feature-scope/SKILL.md` as a standalone skill. Simpler to maintain but adds another command to remember.
-
 ### Agents
 
 For agents that use the scoping checklist (e.g., `memo`, `task`), the choice between templates should follow:
@@ -70,24 +56,6 @@ For agents that use the scoping checklist (e.g., `memo`, `task`), the choice bet
 3. **If unclear** -> start with feature checklist, escalate if needed
 
 The agent HTML comment at the top of `FEATURE_SCOPING_CHECKLIST.md` contains instructions for AI agents.
-
-### Template Selection in `install.sh`
-
-The install script already copies templates to `~/.project-kickstart/templates/`. The new template will be included automatically since it's in the `templates/` directory.
-
-### README Update
-
-Add the feature checklist to the Templates table in `README.md`:
-
-```markdown
-| [Feature Scoping Checklist](templates/FEATURE_SCOPING_CHECKLIST.md) | Engineer / AI | Lightweight scoping for single features/tickets. 7 sections, edge-case focused. |
-```
-
-And add to the Workflow section:
-
-```
-Brief (human) -> /project-kickstart-scope --feature -> Feature Checklist -> /project-kickstart-trd -> TRD -> PRs
-```
 
 ## Design Principles
 

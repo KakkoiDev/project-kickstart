@@ -34,14 +34,6 @@
 
 ## Impact Deep Dive
 
-### Code Impact
-
-<!-- Specific code changes required. More detailed than the CR's effort section. -->
-
-| File / module | Change type | LOC estimate | Complexity | Risk |
-|--------------|-------------|-------------|------------|------|
-| | New / Modify / Delete | | Low / Med / High | Low / Med / High |
-
 ### Dependency Cascade
 
 <!-- Changes this CR triggers in other systems or documents. -->
@@ -55,12 +47,6 @@
 - **New tech debt introduced:** {description, or "none"}
 - **Existing tech debt affected:** {does this make existing debt worse or better}
 - **Debt payoff opportunity:** {can we clean something up while making this change}
-
-### Regression Risk
-
-| Feature | Risk level | Test coverage | Additional testing needed |
-|---------|-----------|--------------|--------------------------|
-| | Low / Med / High | Good / Partial / None | |
 
 ---
 

@@ -14,7 +14,7 @@ All reference documents live in `~/.project-kickstart/`:
 | Document | Purpose |
 |----------|---------|
 | `templates/PROJECT_SCOPING_CHECKLIST.md` | Template to fill (10 parts, ~30 questions) |
-| `templates/FEATURE_SCOPING_CHECKLIST.md` | Lightweight template for single features (7 sections) |
+| `templates/FEATURE_SCOPING_CHECKLIST.md` | Lightweight template for single features (6 sections) |
 | `templates/PROJECT_BRIEF_TEMPLATE.md` | Expected input format |
 | `templates/internal/INTERNAL_PROJECT_SCOPING.md` | Internal companion for project scoping |
 | `templates/internal/INTERNAL_FEATURE_SCOPING.md` | Internal companion for feature scoping |
@@ -38,7 +38,7 @@ All reference documents live in `~/.project-kickstart/`:
 The skill determines which checklist template to use:
 
 1. **Explicit flag:** `--feature` -> uses `FEATURE_SCOPING_CHECKLIST.md`
-2. **Input is a single ticket / user story** -> feature scope (7 sections, no sign-off)
+2. **Input is a single ticket / user story** -> feature scope (6 sections, no sign-off)
 3. **Input is a multi-feature brief** -> project scope (10 parts, dual sign-off)
 4. **No input / unclear** -> ask the user which type
 
@@ -85,7 +85,7 @@ If a brief is provided, read it and build a mapping:
 | Constraints | Part 4 (4.1-4.5) |
 | Out of Scope | Part 3 (3.3) |
 | MVP | Part 3 (3.2) |
-| Open Questions | Part 9 |
+| Open Questions | Inline markers (no dedicated Part) |
 
 Pre-fill answers from the brief where the mapping is direct. Mark pre-filled answers with `[from brief]` so the user can confirm or revise.
 
@@ -109,15 +109,14 @@ For any question the user cannot answer:
 - Format as: `Unknown (owner: {name}, due: {date})`
 - Ask who should own the answer and when it's needed
 - If no owner is provided, default owner is "PM" with due date "before TRD"
-- Collect all unknowns into Part 9 (Open Questions) automatically
+- Collect all unknowns into Part 9 (Next Steps) as items to resolve
 
 ### Step 5: Generate Output
 
 Produce a completed `PROJECT_SCOPING_CHECKLIST.md` with:
 - Header fields filled (Project, Date, PM/Client, Lead Engineer)
 - Every question checked `[x]` with an answer, or marked Unknown with owner/date
-- Part 9 populated with all collected open questions
-- Part 10 next steps checked based on what was discussed
+- Part 9 next steps checked based on what was discussed, including open question resolution
 - Sign-off section ready (names filled, dates blank for actual signing)
 
 Write the output to the user's working directory as `SCOPING_CHECKLIST.md` (or `FEATURE_SCOPING_CHECKLIST.md` for feature scope, or a path they specify).

@@ -123,21 +123,9 @@
 
 ---
 
-## 6. People
+## 6. Open Questions
 
-### Communication cadence
-
-- [ ]
-
-### Stakeholders
-
-- [ ]
-
----
-
-## 7. Open Questions
-
-<!-- All unanswered questions in one place. Tag who to ask. Remove when answered. -->
+<!-- Questions NEW at this stage only. Prior questions should already be resolved in the PRD/ticket. Tag who to ask. Remove when answered. -->
 
 - [ ]
 - [ ]

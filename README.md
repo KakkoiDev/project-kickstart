@@ -2,7 +2,7 @@
 
 Go from "new project" to "first line of code" without losing scope, time, or trust.
 
-3 guides you read once. 5 templates you copy per project. 5 internal templates for AI reasoning. 2 AI skills + 2 AI agents that automate the heavy lifting.
+4 guides you read once. 5 templates you copy per project. 5 internal templates for AI reasoning. 2 AI skills + 2 AI agents that automate the heavy lifting.
 
 ## Install
 
@@ -89,7 +89,7 @@ Without git-dispatch: create one branch per TRD task manually. The task numberin
 |----------|----------|---------|
 | [Brief Template](templates/PROJECT_BRIEF_TEMPLATE.md) | PM / Client | Problem, success criteria, user stories, constraints, out of scope |
 | [Scoping Checklist](templates/PROJECT_SCOPING_CHECKLIST.md) | Both | 30+ questions for the kickoff meeting, dual sign-off |
-| [Feature Scoping Checklist](templates/FEATURE_SCOPING_CHECKLIST.md) | Engineer / AI | Lightweight scoping for single features/tickets. 7 sections, edge-case focused |
+| [Feature Scoping Checklist](templates/FEATURE_SCOPING_CHECKLIST.md) | Engineer / AI | Lightweight scoping for single features/tickets. 6 sections, edge-case focused |
 | [TRD Template](templates/TRD_TEMPLATE.md) | Engineer / AI | Full technical spec: tasks, NFRs, testing, rollback, security |
 | [Change Request](templates/CHANGE_REQUEST.md) | Both | Scope changes mid-project, quick and full formats |
 

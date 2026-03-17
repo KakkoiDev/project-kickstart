@@ -50,7 +50,7 @@
 
 ## 4. Non-Functional Requirements
 
-<!-- Required section. Transfer answers from Scoping Checklist Part 8 and refine with measurable targets. Every sub-section must have at least one concrete, measurable requirement or an explicit "N/A: {reason}". -->
+<!-- Required section. Refine scoping answers into measurable engineering targets. Do not copy vague answers from the checklist. Every sub-section must have at least one concrete, measurable requirement or an explicit "N/A: {reason}". -->
 
 ### 4.1 Performance
 
@@ -104,7 +104,7 @@
 
 ## 6. Rollback Strategy
 
-<!-- Required. How to revert if this ships and breaks. At minimum: feature flag, migration rollback, or deploy revert. -->
+<!-- Required. Rollback MECHANISMS only (feature flags, migration reversibility, deploy revert). For the step-by-step rollback procedure, see Internal TRD > Rollback Rehearsal. -->
 
 | Mechanism              | Details                              |
 |------------------------|--------------------------------------|
@@ -212,7 +212,7 @@
 
 ## 11. Open Questions
 
-<!-- Unresolved items. Assign an owner and target resolution date. Remove when resolved. -->
+<!-- Questions NEW at TRD stage only. Prior questions from brief/scoping should already be resolved. Assign an owner and target resolution date. Remove when resolved. -->
 
 | ID   | Question                   | Owner   | Target Date | Resolution |
 |------|----------------------------|---------|-------------|------------|
